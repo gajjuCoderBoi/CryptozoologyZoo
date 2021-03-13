@@ -2,7 +2,9 @@ package com.cognizant.CryptozoologyZoo.integration;
 
 import com.cognizant.CryptozoologyZoo.AnimalType;
 import com.cognizant.CryptozoologyZoo.dto.AnimalDto;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -28,20 +30,22 @@ public class ZooControllerTest {
     @Autowired
     ObjectMapper objectMapper;
 
+    private String getAnimalJsonString() throws JsonProcessingException {
+        AnimalDto animalDto = new AnimalDto();
+        animalDto.setName("Elephant");
+        animalDto.setType(AnimalType.WALKING);
+        return objectMapper.writeValueAsString(animalDto);
+    }
+
     @Test
     public void addAnimalTest() throws Exception {
-        AnimalDto dummyAnimal = new AnimalDto();
-        dummyAnimal.setName("Superman");
-        dummyAnimal.setType(AnimalType.WALKING);
         RequestBuilder rq = post("/animal")
                 .contentType(MediaType.APPLICATION_JSON)
-//                .accept(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(dummyAnimal));
+                .content(getAnimalJsonString());
 
-        mockMvc
-                .perform(rq)
+        mockMvc.perform(rq)
                     .andExpect(status().isCreated())
-                    .andExpect(content().json(objectMapper.writeValueAsString(dummyAnimal)))
+                    .andExpect(content().json(getAnimalJsonString()))
                     .andDo(print());
     }
 
@@ -53,7 +57,7 @@ public class ZooControllerTest {
         // Execution
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isOk())
-                .andExpect(content().json("[]"))
+                .andExpect(jsonPath("$", hasSize(2)))
                 .andDo(print());
     }
 

@@ -1,5 +1,6 @@
 package com.cognizant.CryptozoologyZoo.controller;
 
+import com.cognizant.CryptozoologyZoo.config.DatabaseLoader;
 import com.cognizant.CryptozoologyZoo.dto.AnimalDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
@@ -12,20 +13,15 @@ import java.util.ArrayList;
 @RequestMapping("/animal")
 public class AnimalController {
 
-    ArrayList<AnimalDto> zoo;
-
-    public AnimalController() {
-        this.zoo = new ArrayList<>();
-    }
-
     @PostMapping()
     public ResponseEntity<?> addAnimal(@RequestBody AnimalDto animalDto){
+        DatabaseLoader.zoo.add(animalDto);
         return new ResponseEntity<>(animalDto, HttpStatus.CREATED);
     }
 
     @GetMapping("/list")
     public ResponseEntity<?> getAnimals() {
-        return new ResponseEntity<>(zoo, HttpStatus.OK);
+        return new ResponseEntity<>(DatabaseLoader.zoo, HttpStatus.OK);
     }
 
 }
