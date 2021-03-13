@@ -1,4 +1,4 @@
-package com.cognizant.CryptozoologyZoo;
+package com.cognizant.CryptozoologyZoo.util;
 
 public enum AnimalType {
     FLYING("flying"), SWIMMING("swimming"), WALKING("walking");

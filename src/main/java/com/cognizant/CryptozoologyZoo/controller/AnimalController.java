@@ -1,5 +1,6 @@
 package com.cognizant.CryptozoologyZoo.controller;
 
+import com.cognizant.CryptozoologyZoo.config.DatabaseLoader;
 import com.cognizant.CryptozoologyZoo.dto.AnimalDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,8 +14,13 @@ public class AnimalController {
 
     @PostMapping()
     public ResponseEntity<?> addAnimal(@RequestBody AnimalDto animalDto){
-        zoo.add(animalDto);
-        return new ResponseEntity<>(animalDto, HttpStatus.CREATED);
+        if (DatabaseLoader.animalTypeHabitatTypeMap.get(animalDto.getType()).equals(animalDto.getHabitatType())) {
+            zoo.add(animalDto);
+            return new ResponseEntity<>(animalDto, HttpStatus.CREATED);
+        }
+        else {
+            return new ResponseEntity<>("Invalid habitat", HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/list")

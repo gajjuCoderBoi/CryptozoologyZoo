@@ -1,4 +1,4 @@
-package com.cognizant.CryptozoologyZoo.config;
+package com.cognizant.CryptozoologyZoo.util;
 
 public enum HabitatType {
     NEST("nest"), OCEAN("ocean"), FOREST("forest");

@@ -1,7 +1,8 @@
 package com.cognizant.CryptozoologyZoo.integration;
 
-import com.cognizant.CryptozoologyZoo.AnimalType;
+import com.cognizant.CryptozoologyZoo.util.AnimalType;
 import com.cognizant.CryptozoologyZoo.dto.AnimalDto;
+import com.cognizant.CryptozoologyZoo.util.HabitatType;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -13,9 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -34,6 +33,7 @@ public class ZooControllerTest {
         AnimalDto animalDto = new AnimalDto();
         animalDto.setName("Elephant");
         animalDto.setType(AnimalType.WALKING);
+        animalDto.setHabitatType(HabitatType.FOREST);
         return objectMapper.writeValueAsString(animalDto);
     }
 
@@ -83,14 +83,12 @@ public class ZooControllerTest {
         dummyAnimal.setHappy(true);
         RequestBuilder rq = patch("/animal/feed/Camel")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(dummyAnimal))
-                ;
+                .content(objectMapper.writeValueAsString(dummyAnimal));
 
         mockMvc.perform(rq)
                 .andExpect(status().isNotFound())
                 .andDo(print())
-                .andExpect(content().string("Animal not found."))
-        ;
+                .andExpect(content().string("Animal not found."));
     }
 
 
@@ -100,13 +98,26 @@ public class ZooControllerTest {
         dummyAnimal.setHappy(false);
         RequestBuilder rq = patch("/animal/feed/Cat")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(dummyAnimal))
-                ;
+                .content(objectMapper.writeValueAsString(dummyAnimal));
 
         mockMvc.perform(rq)
                 .andExpect(status().isOk())
                 .andDo(print())
-                .andExpect(content().string("I'm not Happy. "))
-        ;
+                .andExpect(content().string("I'm not Happy. "));
+    }
+
+    @Test
+    public void updateAnimalHabitat() throws Exception {
+        AnimalDto dummyAnimal = new AnimalDto();
+        dummyAnimal.setHabitatType(HabitatType.FOREST);
+
+        RequestBuilder rq = put("/animal/Cat")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(dummyAnimal));
+
+        mockMvc.perform(rq)
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(content().string("I'm good habitat place. "));
     }
 }

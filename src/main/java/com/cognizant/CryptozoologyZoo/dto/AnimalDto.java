@@ -1,7 +1,7 @@
 package com.cognizant.CryptozoologyZoo.dto;
 
-import com.cognizant.CryptozoologyZoo.AnimalType;
-import com.cognizant.CryptozoologyZoo.config.HabitatType;
+import com.cognizant.CryptozoologyZoo.util.AnimalType;
+import com.cognizant.CryptozoologyZoo.util.HabitatType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
