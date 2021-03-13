@@ -42,4 +42,24 @@ public class AnimalController {
             return new ResponseEntity<>(animalDto.isHappy() ? "I'm Happy Now. " : "I'm not Happy. ", HttpStatus.OK);
     }
 
+    @PutMapping("/{name}")
+    public ResponseEntity<?> updateAnimal(@PathVariable String name, @RequestBody AnimalDto updatingAnimal){
+        AnimalDto animalDto = zoo.stream()
+                .filter(animal->animal.getName().equals(name))
+                .findAny()
+                .orElse(null);
+
+        if(animalDto == null ) {
+            return new ResponseEntity<>("Animal not found.", HttpStatus.NOT_FOUND);
+        }
+        animalDto.setHabitatType(updatingAnimal.getHabitatType());
+        if (DatabaseLoader.animalTypeHabitatTypeMap.get(animalDto.getType()).equals(animalDto.getHabitatType())) {
+            animalDto.setHappy(true);
+        }
+        else {
+            animalDto.setHappy(false);
+        }
+        return new ResponseEntity<>(animalDto.isHappy() ? "I'm good habitat place. " : "I'm not Happy with this Habitat! ", HttpStatus.OK);
+    }
+
 }
