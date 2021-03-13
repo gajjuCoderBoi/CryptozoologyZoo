@@ -11,5 +11,11 @@ import lombok.NoArgsConstructor;
 public class AnimalDto {
     private String name;
     private AnimalType type;
+    private boolean happy=false;
 
+    public AnimalDto(String name, AnimalType type) {
+        this.name = name;
+        this.type = type;
+        this.happy = false;
+    }
 }

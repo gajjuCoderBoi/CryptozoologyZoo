@@ -63,14 +63,50 @@ public class ZooControllerTest {
 
     @Test
     public void feedAnimalMakeHappyTest() throws Exception {
-        RequestBuilder rq = patch("/feed/Cat")
-                .contentType(MediaType.APPLICATION_JSON);
+        AnimalDto dummyAnimal = new AnimalDto();
+        dummyAnimal.setHappy(true);
+        RequestBuilder rq = patch("/animal/feed/Cat")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(dummyAnimal))
+                ;
 
         mockMvc.perform(rq)
                 .andExpect(status().isOk())
                 .andDo(print())
-                .andExpect(content().string("happy. :)"))
+                .andExpect(content().string("I'm Happy Now. "))
         ;
     }
 
+    @Test
+    public void feedAnimalMakeHappyTestCatNotFound() throws Exception {
+        AnimalDto dummyAnimal = new AnimalDto();
+        dummyAnimal.setHappy(true);
+        RequestBuilder rq = patch("/animal/feed/Camel")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(dummyAnimal))
+                ;
+
+        mockMvc.perform(rq)
+                .andExpect(status().isNotFound())
+                .andDo(print())
+                .andExpect(content().string("Animal not found."))
+        ;
+    }
+
+
+    @Test
+    public void feedAnimalMakeHappyTestAnimalNotHappy() throws Exception {
+        AnimalDto dummyAnimal = new AnimalDto();
+        dummyAnimal.setHappy(false);
+        RequestBuilder rq = patch("/animal/feed/Cat")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(dummyAnimal))
+                ;
+
+        mockMvc.perform(rq)
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(content().string("I'm not Happy. "))
+        ;
+    }
 }
