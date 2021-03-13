@@ -19,9 +19,13 @@ public class AnimalController {
     }
 
     @PostMapping()
-//    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> addAnimal(@RequestBody AnimalDto animalDto){
-            return new ResponseEntity<>(animalDto, HttpStatus.CREATED);
+        return new ResponseEntity<>(animalDto, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<?> getAnimals() {
+        return new ResponseEntity<>(zoo, HttpStatus.OK);
     }
 
 }

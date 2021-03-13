@@ -53,7 +53,7 @@ public class ZooControllerTest {
         // Execution
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(0)))
+                .andExpect(content().json("[]"))
                 .andDo(print());
     }
 
