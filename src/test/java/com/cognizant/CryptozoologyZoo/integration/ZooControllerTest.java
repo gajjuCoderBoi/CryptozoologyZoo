@@ -4,7 +4,6 @@ import com.cognizant.CryptozoologyZoo.AnimalType;
 import com.cognizant.CryptozoologyZoo.dto.AnimalDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -14,8 +13,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -59,6 +59,18 @@ public class ZooControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andDo(print());
+    }
+
+    @Test
+    public void feedAnimalMakeHappyTest() throws Exception {
+        RequestBuilder rq = patch("/feed/Cat")
+                .contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(rq)
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(content().string("happy. :)"))
+        ;
     }
 
 }
