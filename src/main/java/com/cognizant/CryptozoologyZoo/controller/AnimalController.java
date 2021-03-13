@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static com.cognizant.CryptozoologyZoo.config.DatabaseLoader.animalTypeHabitatTypeMap;
 import static com.cognizant.CryptozoologyZoo.config.DatabaseLoader.zoo;
 
 @RestController
@@ -14,13 +15,17 @@ public class AnimalController {
 
     @PostMapping()
     public ResponseEntity<?> addAnimal(@RequestBody AnimalDto animalDto){
-        if (DatabaseLoader.animalTypeHabitatTypeMap.get(animalDto.getType()).equals(animalDto.getHabitatType())) {
-            zoo.add(animalDto);
-            return new ResponseEntity<>(animalDto, HttpStatus.CREATED);
+        if (animalDto.getHabitatType() == null) {
+            animalDto.setHabitatType(animalTypeHabitatTypeMap.get(animalDto.getType()));
+        }
+        if (animalTypeHabitatTypeMap.get(animalDto.getType()).equals(animalDto.getHabitatType())) {
+            animalDto.setHappy(true);
         }
         else {
-            return new ResponseEntity<>("Invalid habitat", HttpStatus.BAD_REQUEST);
+            animalDto.setHappy(false);
         }
+        zoo.add(animalDto);
+        return new ResponseEntity<>(animalDto, HttpStatus.CREATED);
     }
 
     @GetMapping("/list")
@@ -53,7 +58,7 @@ public class AnimalController {
             return new ResponseEntity<>("Animal not found.", HttpStatus.NOT_FOUND);
         }
         animalDto.setHabitatType(updatingAnimal.getHabitatType());
-        if (DatabaseLoader.animalTypeHabitatTypeMap.get(animalDto.getType()).equals(animalDto.getHabitatType())) {
+        if (animalTypeHabitatTypeMap.get(animalDto.getType()).equals(animalDto.getHabitatType())) {
             animalDto.setHappy(true);
         }
         else {

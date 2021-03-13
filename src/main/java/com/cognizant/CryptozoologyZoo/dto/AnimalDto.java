@@ -1,5 +1,6 @@
 package com.cognizant.CryptozoologyZoo.dto;
 
+import com.cognizant.CryptozoologyZoo.config.DatabaseLoader;
 import com.cognizant.CryptozoologyZoo.util.AnimalType;
 import com.cognizant.CryptozoologyZoo.util.HabitatType;
 import lombok.AllArgsConstructor;
@@ -18,6 +19,7 @@ public class AnimalDto {
     public AnimalDto(String name, AnimalType type) {
         this.name = name;
         this.type = type;
+        this.habitatType = DatabaseLoader.animalTypeHabitatTypeMap.get(type);
         this.happy = false;
     }
 }

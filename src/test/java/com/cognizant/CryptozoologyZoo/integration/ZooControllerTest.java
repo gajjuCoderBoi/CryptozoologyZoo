@@ -45,7 +45,7 @@ public class ZooControllerTest {
 
         mockMvc.perform(rq)
                     .andExpect(status().isCreated())
-                    .andExpect(content().json(getAnimalJsonString()))
+                    .andExpect(jsonPath("happy").value(true))
                     .andDo(print());
     }
 
@@ -107,7 +107,7 @@ public class ZooControllerTest {
     }
 
     @Test
-    public void updateAnimalHabitat() throws Exception {
+    public void updateAnimalHabitatTest() throws Exception {
         AnimalDto dummyAnimal = new AnimalDto();
         dummyAnimal.setHabitatType(HabitatType.FOREST);
 
@@ -119,5 +119,32 @@ public class ZooControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().string("I'm good habitat place. "));
+    }
+
+    @Test
+    public void updateAnimalHabitatTestCamelNotFound() throws Exception {
+        RequestBuilder rq = put("/animal/Camel")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{}");
+
+        mockMvc.perform(rq)
+                .andExpect(status().isNotFound())
+                .andDo(print())
+                .andExpect(content().string("Animal not found."));
+    }
+
+
+    @Test
+    public void updateAnimalHabitatTestAnimalNotHappy() throws Exception {
+        AnimalDto dummyAnimal = new AnimalDto();
+        dummyAnimal.setHabitatType(HabitatType.OCEAN);
+        RequestBuilder rq = put("/animal/Cat")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(dummyAnimal));
+
+        mockMvc.perform(rq)
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(content().string("I'm not Happy with this Habitat! "));
     }
 }
