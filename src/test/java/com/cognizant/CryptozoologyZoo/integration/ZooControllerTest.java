@@ -11,10 +11,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 @SpringBootTest
@@ -41,10 +42,19 @@ public class ZooControllerTest {
                 .perform(rq)
                     .andExpect(status().isCreated())
                     .andExpect(content().json(objectMapper.writeValueAsString(dummyAnimal)))
-                    .andDo(print())
+                    .andDo(print());
+    }
 
-        ;
-
+    @Test
+    public void getAllAnimalsTest() throws Exception {
+        // Setup
+        RequestBuilder requestBuilder = get("/animal/list")
+                .accept(MediaType.APPLICATION_JSON);
+        // Execution
+        mockMvc.perform(requestBuilder)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(0)))
+                .andDo(print());
     }
 
 }
