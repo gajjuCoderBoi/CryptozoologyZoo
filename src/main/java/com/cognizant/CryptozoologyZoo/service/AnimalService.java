@@ -6,6 +6,9 @@ import com.cognizant.CryptozoologyZoo.repository.AnimalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class AnimalService {
 
@@ -35,4 +38,8 @@ public class AnimalService {
         return animalDto;
     }
 
+    public List<AnimalDto> getAllAnimals() {
+        List<Animal> savedAnimals = animalRepository.findAll();
+        return savedAnimals.stream().map(animal -> entityToDto(animal)).collect(Collectors.toList());
+    }
 }

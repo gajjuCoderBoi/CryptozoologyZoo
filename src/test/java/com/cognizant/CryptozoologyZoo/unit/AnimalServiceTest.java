@@ -11,7 +11,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -35,8 +40,16 @@ public class AnimalServiceTest {
         animalService.addAnimal(dummyAnimalDto);
 
         verify(animalRepository).save(dummyAnimalEntity);
+    }
 
+    @Test
+    public void getAllAnimals() {
+        List<Animal> animals = Arrays.asList(new Animal());
+        when(animalRepository.findAll()).thenReturn(animals);
 
+        List<AnimalDto> dtos = animalService.getAllAnimals();
+
+        assertEquals(Arrays.asList(new AnimalDto()), dtos);
     }
 
 }
