@@ -23,6 +23,7 @@ public class ZooControllerTest {
     public void addAnimalTest() throws Exception {
         RequestBuilder rq = post("/animal")
                 .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
                 .content("{}");
 
         mockMvc
